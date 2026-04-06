@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model ContentSource {
+  id         String   @id @default(cuid())
+  name       String
+  type       String   // 'rss' | 'api' | 'manual'
+  url        String   @unique
+  isActive   Boolean  @default(true)
+  lastSyncAt DateTime?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  contents ContentItem[]
+
+  @@map("content_sources")
+}
+
+model ContentItem {
+  id            String   @id @default(cuid())
+  title         String
+  description   String?
+  url           String   @unique
+  contentType   String   // 'article' | 'book' | 'podcast' | 'video' | 'tool'
+  tags          String   @default("[]") // JSON array stored as string (SQLite)
+  processorType String   @default("basic") // 'basic' | 'manual' | 'ai'
+  qualityScore  Float?
+  sourceId      String
+  publishedAt   DateTime
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  source ContentSource @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+
+  @@index([contentType])
+  @@index([sourceId])
+  @@index([publishedAt])
+  @@index([qualityScore])
+  @@map("content_items")
+}
+
+model ContentProcessor {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  type      String   // 'basic' | 'manual' | 'ai'
+  config    String   @default("{}") // JSON stored as string (SQLite)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("content_processors")
+}
