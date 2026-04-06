@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { serverlessDb } from "@/lib/db/prisma-serverless";
+import { prisma } from "@/lib/db/prisma";
 import type { ContentType } from "@/lib/types";
+import { Prisma } from "@prisma/client";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
@@ -13,7 +14,7 @@ export async function GET(request: NextRequest) {
     .filter(Boolean) as ContentType[] | undefined;
   const days = searchParams.get("days");
 
-  const where: any = {};
+  const where: Prisma.ContentItemWhereInput = {};
 
   if (query) {
     where.OR = [
@@ -33,29 +34,27 @@ export async function GET(request: NextRequest) {
     where.publishedAt = { gte: cutoff };
   }
 
-  try {
-    const [items, total] = await Promise.all([
-      serverlessDb.contentItem.findMany({
-        where,
-        orderBy: { publishedAt: "desc" },
-        skip: (page - 1) * pageSize,
-        take: pageSize,
-      }),
-      serverlessDb.contentItem.count({ where }),
-    ]);
+  const [items, total] = await Promise.all([
+    prisma.contentItem.findMany({
+      where,
+      orderBy: { publishedAt: "desc" },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+    }),
+    prisma.contentItem.count({ where }),
+  ]);
 
-    return NextResponse.json({
-      items,
-      total,
-      page,
-      pageSize,
-      hasMore: (page - 1) * pageSize + pageSize < total,
-    });
-  } catch (error) {
-    console.error("API Error:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch content" },
-      { status: 500 }
-    );
-  }
+  // Parse tags JSON string back to array for the frontend
+  const serializedItems = items.map((item) => ({
+    ...item,
+    tags: JSON.parse(item.tags) as string[],
+  }));
+
+  return NextResponse.json({
+    items: serializedItems,
+    total,
+    page,
+    pageSize,
+    hasMore: page * pageSize < total,
+  });
 }

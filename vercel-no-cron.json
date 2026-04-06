@@ -1,0 +1,10 @@
+{
+  "functions": {
+    "src/app/api/sync/route.ts": {
+      "maxDuration": 300
+    }
+  },
+  "env": {
+    "DATABASE_URL": "file:./prod.db"
+  }
+}
