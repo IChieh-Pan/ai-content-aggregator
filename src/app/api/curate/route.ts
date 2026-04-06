@@ -6,15 +6,39 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 // Map publication names to their domains for targeted searches
 function getSourceDomain(sourceName: string): string {
   const domainMap: { [key: string]: string } = {
+    // Articles & Publications
     "Nielsen Norman Group": "nngroup.com",
     "UX Collective": "uxdesign.cc",
     "UX Planet": "uxplanet.org",
     "A List Apart": "alistapart.com",
     "Smashing Magazine": "smashingmagazine.com",
     "UX Mastery": "uxmastery.com",
-    "UXPin": "uxpin.com",
+    "Adobe Blog": "blog.adobe.com",
     "Figma": "figma.com",
-    "Adobe": "adobe.com",
+
+    // Tools & Resources
+    "Product Hunt": "producthunt.com",
+    "UXTools": "uxtools.co",
+    "AI Design Tools": "aidesigntools.com",
+    "Figma Community": "figma.com/community",
+
+    // Videos & Learning
+    "YouTube": "youtube.com",
+    "Vimeo": "vimeo.com",
+    "Design Conference Archives": "youtube.com",
+
+    // Podcasts
+    "Design Better": "designbetter.co",
+    "What is Wrong with UX": "podcasts.google.com",
+    "User Defenders": "userdefenders.com",
+    "The Honest Designers Show": "thehonestdesignersshow.com",
+
+    // Books & Publications
+    "O'Reilly": "oreilly.com",
+    "A Book Apart": "abookapart.com",
+    "Rosenfeld Media": "rosenfeldmedia.com",
+
+    // General
     "Medium": "medium.com"
   };
 
@@ -32,42 +56,88 @@ export async function POST() {
 
     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
-    const prompt = `
-You are a UX content curator specializing in AI+Design. Create 8-12 high-quality content recommendations about the intersection of AI and UX design.
+    // Add randomization to generate different content each time
+    const currentTime = new Date().toISOString();
+    const randomSeed = Math.floor(Math.random() * 1000);
 
-Focus on these topics:
-- AI in UX design processes and tools
-- Human-centered AI design principles
-- AI ethics and accessibility in design
-- Conversational UI and voice interfaces
-- AI-powered personalization in UX
-- Design systems and AI automation
-- User research with AI tools
-- AI transparency and explainability in design
+    const topicRotations = [
+      "AI-powered design tools and workflow automation",
+      "Ethical AI considerations and bias prevention in UX",
+      "Conversational interfaces and voice-first design",
+      "AI personalization and recommendation systems",
+      "Design systems automation with AI",
+      "AI in user research and data analysis",
+      "Accessibility and inclusive AI design",
+      "AI transparency and explainable interfaces"
+    ];
+
+    const contentMixes = [
+      "Mix of articles (40%), tools (30%), videos (20%), podcasts (10%)",
+      "Mix of tools (35%), articles (30%), podcasts (25%), books (10%)",
+      "Mix of videos (40%), articles (30%), tools (20%), podcasts (10%)",
+      "Mix of articles (35%), podcasts (30%), videos (25%), tools (10%)"
+    ];
+
+    const focusArea = topicRotations[randomSeed % topicRotations.length];
+    const contentMix = contentMixes[randomSeed % contentMixes.length];
+
+    const prompt = `
+You are a UX content curator specializing in AI+Design. Create 10-14 DIVERSE content recommendations about AI and UX design.
+
+VARIETY REQUIREMENT: Generate DIFFERENT content each time. Current session: ${currentTime}-${randomSeed}
+
+PRIMARY FOCUS for this curation: "${focusArea}"
+CONTENT MIX TARGET: ${contentMix}
+
+TOPICS TO EXPLORE (vary the emphasis each time):
+- AI-powered design tools and automation workflows
+- Human-centered AI design principles and ethics
+- Conversational UI, chatbots, and voice interfaces
+- AI personalization and behavioral prediction
+- Design systems automation and smart components
+- AI in user research, testing, and analytics
+- Accessibility tools powered by AI
+- Explainable AI and transparency in design
+- AI-generated content and creative workflows
+- Machine learning for UX optimization
+
+CONTENT TYPES TO INCLUDE:
+- **Articles**: Recent blog posts, research papers, case studies
+- **Tools**: AI-powered UX/design tools, plugins, platforms
+- **Videos**: YouTube tutorials, conference talks, demos
+- **Podcasts**: Design podcast episodes, interviews with AI+UX experts
+- **Books**: Recent publications about AI in design (2023-2026)
+
+DIVERSE SOURCES (mix these up):
+- Articles: "UX Collective", "Nielsen Norman Group", "Smashing Magazine", "A List Apart", "UX Planet", "Adobe Blog"
+- Tools: "Product Hunt", "UXTools", "AI Design Tools", "Figma Community"
+- Videos: "YouTube", "Vimeo", "Design Conference Archives"
+- Podcasts: "Design Better", "What is Wrong with UX", "User Defenders", "The Honest Designers Show"
+- Books: "O'Reilly", "A Book Apart", "Rosenfeld Media"
 
 For each recommendation, provide:
-1. Title (compelling and specific to current AI+UX trends)
-2. Description (2-3 sentences explaining key insights and actionable takeaways)
-3. Source (realistic publication name like "Nielsen Norman Group", "UX Collective", "A List Apart", etc.)
-4. ContentType (article, tool, or video)
+1. Title (compelling, specific, and VARIED from previous curations)
+2. Description (2-3 sentences with actionable insights)
+3. Source (realistic publication/platform name)
+4. ContentType (article, tool, video, podcast, or book)
 5. Tags (3-5 relevant tags)
-6. QualityScore (0.0-1.0 based on relevance and actionability for UX designers)
-7. SearchQuery (search terms that would help find this type of content)
+6. QualityScore (0.7-1.0 for high-quality content)
+7. SearchQuery (specific search terms for finding this content)
 
 Return as JSON array with this structure:
 [
   {
-    "title": "Designing Ethical AI Interfaces: A UX Framework",
-    "description": "Comprehensive guide to implementing ethical considerations in AI-powered interfaces. Covers transparency patterns, bias detection methods, and user agency principles that every UX designer should know.",
-    "source": "Nielsen Norman Group",
-    "contentType": "article",
-    "tags": ["ai-ethics", "ux-framework", "interface-design", "transparency"],
-    "qualityScore": 0.92,
-    "searchQuery": "ethical AI UX design framework transparency"
+    "title": "AI-Powered Figma Plugin: Automated Layout Generation",
+    "description": "Revolutionary plugin that uses machine learning to generate responsive layouts from simple wireframes. Reduces design time by 60% while maintaining design system consistency.",
+    "source": "Product Hunt",
+    "contentType": "tool",
+    "tags": ["figma-plugin", "layout-automation", "ai-tools", "design-systems"],
+    "qualityScore": 0.89,
+    "searchQuery": "Figma AI plugin automated layout generation 2026"
   }
 ]
 
-Focus on actionable insights, current trends, and practical frameworks for UX designers working with AI in 2026.
+IMPORTANT: Generate FRESH, VARIED content each time. Don't repeat the same articles/topics. Focus on current trends and practical value for UX designers.
     `;
 
     const result = await model.generateContent(prompt);
@@ -93,15 +163,49 @@ Focus on actionable insights, current trends, and practical frameworks for UX de
         totalItems: curatedContent.length,
         source: "gemini-ai-curator",
         items: curatedContent.map((item: any, index: number) => {
-          // Create search URLs based on the search query and source
-          const searchQuery = encodeURIComponent(item.searchQuery || item.title);
-          const sourceQuery = item.source ? encodeURIComponent(`site:${getSourceDomain(item.source)} ${item.searchQuery || item.title}`) : searchQuery;
+          // Create search URLs optimized by content type
+          const baseQuery = item.searchQuery || item.title;
+          const domain = getSourceDomain(item.source);
+
+          let searchUrl;
+          switch (item.contentType) {
+            case "tool":
+              // For tools, search ProductHunt or the specific domain
+              if (item.source === "Product Hunt") {
+                searchUrl = `https://www.producthunt.com/search?q=${encodeURIComponent(baseQuery)}`;
+              } else {
+                searchUrl = `https://www.google.com/search?q=site:${domain} ${encodeURIComponent(baseQuery)}`;
+              }
+              break;
+
+            case "video":
+              // For videos, prioritize YouTube search
+              if (domain.includes("youtube")) {
+                searchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(baseQuery + " UX design AI")}`;
+              } else {
+                searchUrl = `https://www.google.com/search?q=site:${domain} ${encodeURIComponent(baseQuery)} video`;
+              }
+              break;
+
+            case "podcast":
+              // For podcasts, use Google Podcasts or general search
+              searchUrl = `https://www.google.com/search?q=${encodeURIComponent(baseQuery + " podcast UX AI design")}`;
+              break;
+
+            case "book":
+              // For books, search on the publisher or general book search
+              searchUrl = `https://www.google.com/search?q=site:${domain} ${encodeURIComponent(baseQuery)} book`;
+              break;
+
+            default: // article
+              searchUrl = `https://www.google.com/search?q=site:${domain} ${encodeURIComponent(baseQuery)}`;
+          }
 
           return {
             id: `gemini-${Date.now()}-${index}`,
             title: item.title,
             description: item.description,
-            url: `https://www.google.com/search?q=${sourceQuery}`,
+            url: searchUrl,
             source: item.source,
             contentType: item.contentType || "article",
             tags: item.tags || [],

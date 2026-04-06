@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import type { ContentType } from "@/lib/types";
 
-// Sample high-quality UX+AI content as fallback with working search links
+// Sample high-quality UX+AI content with diverse types as fallback
 const SAMPLE_CONTENT = [
   {
     id: "ai-design-systems-2026",
@@ -16,38 +16,62 @@ const SAMPLE_CONTENT = [
     processorType: "ai"
   },
   {
-    id: "ethical-ai-ux-principles",
-    title: "Building Ethical AI into UX: A Designer's Guide",
-    description: "Essential principles and practical frameworks for integrating ethical AI considerations into UX design processes. Covers transparency, bias prevention, and user agency in AI-driven interfaces.",
-    url: "https://www.google.com/search?q=site:nngroup.com+ethical+AI+UX+design+principles",
-    contentType: "article" as ContentType,
-    tags: ["ai-ethics", "ux-design", "transparency", "bias-prevention"],
-    qualityScore: 0.95,
+    id: "figma-ai-plugin-autoflow",
+    title: "AutoFlow AI: Figma Plugin for Smart Layout Generation",
+    description: "Revolutionary AI plugin that automatically creates responsive layouts from sketches. Uses machine learning to understand design patterns and generate production-ready components in seconds.",
+    url: "https://www.producthunt.com/search?q=Figma+AI+layout+automation+plugin",
+    contentType: "tool" as ContentType,
+    tags: ["figma-plugin", "ai-tools", "layout-automation", "productivity"],
+    qualityScore: 0.89,
     publishedAt: new Date("2026-04-04"),
     sourceId: "sample",
     processorType: "ai"
   },
   {
-    id: "conversational-ui-patterns",
-    title: "Conversational UI Patterns for AI Assistants",
-    description: "Comprehensive guide to designing conversational interfaces that feel natural and helpful. Includes best practices for chatbots, voice UI, and multimodal AI interactions.",
-    url: "https://www.google.com/search?q=site:uxplanet.org+conversational+UI+patterns+chatbot+design",
-    contentType: "article" as ContentType,
-    tags: ["conversational-ui", "chatbots", "voice-interface", "ai-interaction"],
-    qualityScore: 0.88,
+    id: "design-better-ai-episode",
+    title: "The Future of AI in Design Teams",
+    description: "In-depth podcast discussion with leading design teams about integrating AI into design workflows. Features real case studies from Airbnb, Spotify, and emerging AI-first design companies.",
+    url: "https://www.google.com/search?q=AI+design+teams+workflow+podcast+case+studies",
+    contentType: "podcast" as ContentType,
+    tags: ["design-teams", "ai-workflow", "case-studies", "leadership"],
+    qualityScore: 0.87,
     publishedAt: new Date("2026-04-03"),
     sourceId: "sample",
     processorType: "ai"
   },
   {
-    id: "ai-accessibility-design",
-    title: "AI-Powered Accessibility: Making Inclusive Design Easier",
-    description: "How AI tools are revolutionizing accessibility in design by automatically detecting issues, suggesting improvements, and creating more inclusive user experiences.",
-    url: "https://www.google.com/search?q=site:alistapart.com+AI+accessibility+inclusive+design+automation",
-    contentType: "article" as ContentType,
-    tags: ["accessibility", "ai-tools", "inclusive-design", "automation"],
-    qualityScore: 0.90,
+    id: "youtube-ai-ux-tutorial",
+    title: "Building AI-First UX: Complete Tutorial Series",
+    description: "Comprehensive video series covering everything from AI user research to implementation of smart interfaces. Includes hands-on coding examples and design system integration.",
+    url: "https://www.youtube.com/results?search_query=AI+UX+design+tutorial+2026+hands+on",
+    contentType: "video" as ContentType,
+    tags: ["tutorial", "ai-implementation", "hands-on", "video-series"],
+    qualityScore: 0.85,
     publishedAt: new Date("2026-04-02"),
+    sourceId: "sample",
+    processorType: "ai"
+  },
+  {
+    id: "human-centered-ai-book",
+    title: "Human-Centered AI Design: A Practitioner's Guide",
+    description: "Comprehensive book covering ethical AI implementation in user interfaces. Written by leading researchers and practitioners, with real-world case studies and actionable frameworks for 2026.",
+    url: "https://www.google.com/search?q=site:oreilly.com+human+centered+AI+design+book+2026",
+    contentType: "book" as ContentType,
+    tags: ["ai-ethics", "human-centered-design", "frameworks", "research"],
+    qualityScore: 0.94,
+    publishedAt: new Date("2026-04-01"),
+    sourceId: "sample",
+    processorType: "ai"
+  },
+  {
+    id: "voice-ui-accessibility",
+    title: "Making Voice AI Interfaces Accessible for Everyone",
+    description: "Essential guidelines and practical techniques for designing inclusive voice interfaces. Covers speech recognition challenges, alternative inputs, and multi-modal accessibility patterns.",
+    url: "https://www.google.com/search?q=site:nngroup.com+voice+AI+accessibility+inclusive+design",
+    contentType: "article" as ContentType,
+    tags: ["voice-ui", "accessibility", "inclusive-design", "multimodal"],
+    qualityScore: 0.91,
+    publishedAt: new Date("2026-03-31"),
     sourceId: "sample",
     processorType: "ai"
   }

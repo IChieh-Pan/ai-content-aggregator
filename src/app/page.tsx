@@ -81,7 +81,7 @@ export default function Home() {
           Discover AI Content
         </h1>
         <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-          Curated articles, tools, and resources about AI for UX designers
+          AI-curated articles, tools, videos, podcasts & books about AI for UX designers
         </p>
       </div>
 
@@ -111,9 +111,9 @@ export default function Home() {
       {useAI && (
         <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
           <p className="text-sm text-blue-700 dark:text-blue-300">
-            ✨ Showing AI-curated content from Gemini. Fresh topics about AI+UX selected just for you!
+            ✨ Fresh AI-curated content from Gemini! Mix of articles, tools, videos, podcasts & books about AI+UX.
             <span className="block mt-1 text-xs opacity-75">
-              💡 Click titles to search for these articles on the recommended publications
+              💡 Click titles to search for content on recommended platforms (YouTube, Product Hunt, publications, etc.)
             </span>
           </p>
         </div>
