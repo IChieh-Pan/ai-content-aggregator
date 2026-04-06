@@ -8,6 +8,25 @@ import ContentList from '@/components/ContentList';
 
 const PAGE_SIZE = 12;
 
+// Helper function to format relative time
+function getRelativeTime(date: Date): string {
+  const now = new Date();
+  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+  if (diffInSeconds < 60) {
+    return 'Just now';
+  } else if (diffInSeconds < 3600) {
+    const minutes = Math.floor(diffInSeconds / 60);
+    return `${minutes} minute${minutes !== 1 ? 's' : ''} ago`;
+  } else if (diffInSeconds < 86400) {
+    const hours = Math.floor(diffInSeconds / 3600);
+    return `${hours} hour${hours !== 1 ? 's' : ''} ago`;
+  } else {
+    const days = Math.floor(diffInSeconds / 86400);
+    return `${days} day${days !== 1 ? 's' : ''} ago`;
+  }
+}
+
 export default function Home() {
   const [items, setItems] = useState<ContentItem[]>([]);
   const [total, setTotal] = useState(0);
@@ -18,6 +37,8 @@ export default function Home() {
   const [dateRange, setDateRange] = useState('');
   const [isAICurating, setIsAICurating] = useState(false);
   const [useAI, setUseAI] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  const [currentTime, setCurrentTime] = useState(new Date());
 
   const fetchContent = useCallback(async (aiMode = useAI) => {
     setIsLoading(true);
@@ -36,6 +57,7 @@ export default function Home() {
       const data = await res.json();
       setItems(data.items);
       setTotal(data.total);
+      setLastUpdated(new Date());
     } catch {
       setItems([]);
       setTotal(0);
@@ -59,6 +81,15 @@ export default function Home() {
     fetchContent();
   }, [fetchContent]);
 
+  // Update current time every minute for relative time display
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 60000); // Update every minute
+
+    return () => clearInterval(timer);
+  }, []);
+
   const handleSearch = useCallback((value: string) => {
     setQuery(value);
     setPage(1);
@@ -77,12 +108,30 @@ export default function Home() {
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
-          Discover AI Content
-        </h1>
-        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-          AI-curated articles, tools, videos, podcasts & books about AI for UX designers
-        </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
+              Discover AI Content
+            </h1>
+            <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+              AI-curated articles, tools, videos, podcasts & books about AI for UX designers
+            </p>
+          </div>
+
+          {lastUpdated && (
+            <div className="text-right">
+              <div className="flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>Last updated:</span>
+              </div>
+              <div className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                {getRelativeTime(lastUpdated)}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* AI Curate Button */}
