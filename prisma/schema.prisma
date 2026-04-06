@@ -3,7 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model ContentSource {
@@ -27,7 +28,7 @@ model ContentItem {
   description   String?
   url           String   @unique
   contentType   String   // 'article' | 'book' | 'podcast' | 'video' | 'tool'
-  tags          String   @default("[]") // JSON array stored as string (SQLite)
+  tags          String   @default("[]") // JSON array stored as string
   processorType String   @default("basic") // 'basic' | 'manual' | 'ai'
   qualityScore  Float?
   sourceId      String
@@ -48,7 +49,7 @@ model ContentProcessor {
   id        String   @id @default(cuid())
   name      String   @unique
   type      String   // 'basic' | 'manual' | 'ai'
-  config    String   @default("{}") // JSON stored as string (SQLite)
+  config    String   @default("{}") // JSON stored as string
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

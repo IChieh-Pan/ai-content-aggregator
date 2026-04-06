@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { serverlessDb } from "@/lib/db/prisma-serverless";
+import { prisma } from "@/lib/db/prisma";
 import type { ContentType } from "@/lib/types";
+import { Prisma } from "@prisma/client";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
@@ -13,13 +14,13 @@ export async function GET(request: NextRequest) {
     .filter(Boolean) as ContentType[] | undefined;
   const days = searchParams.get("days");
 
-  const where: any = {};
+  const where: Prisma.ContentItemWhereInput = {};
 
   if (query) {
     where.OR = [
-      { title: { contains: query } },
-      { description: { contains: query } },
-      { tags: { contains: query } },
+      { title: { contains: query, mode: "insensitive" } },
+      { description: { contains: query, mode: "insensitive" } },
+      { tags: { contains: query, mode: "insensitive" } },
     ];
   }
 
@@ -35,17 +36,23 @@ export async function GET(request: NextRequest) {
 
   try {
     const [items, total] = await Promise.all([
-      serverlessDb.contentItem.findMany({
+      prisma.contentItem.findMany({
         where,
         orderBy: { publishedAt: "desc" },
         skip: (page - 1) * pageSize,
         take: pageSize,
       }),
-      serverlessDb.contentItem.count({ where }),
+      prisma.contentItem.count({ where }),
     ]);
 
+    // Parse tags JSON string back to array for the frontend
+    const serializedItems = items.map((item) => ({
+      ...item,
+      tags: JSON.parse(item.tags) as string[],
+    }));
+
     return NextResponse.json({
-      items,
+      items: serializedItems,
       total,
       page,
       pageSize,
