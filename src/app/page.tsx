@@ -111,7 +111,10 @@ export default function Home() {
       {useAI && (
         <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
           <p className="text-sm text-blue-700 dark:text-blue-300">
-            ✨ Showing AI-curated content from Gemini. Fresh articles about AI+UX selected just for you!
+            ✨ Showing AI-curated content from Gemini. Fresh topics about AI+UX selected just for you!
+            <span className="block mt-1 text-xs opacity-75">
+              💡 Click titles to search for these articles on the recommended publications
+            </span>
           </p>
         </div>
       )}

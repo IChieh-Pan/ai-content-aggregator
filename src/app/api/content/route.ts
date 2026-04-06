@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import type { ContentType } from "@/lib/types";
 
-// Sample high-quality UX+AI content as fallback
+// Sample high-quality UX+AI content as fallback with working search links
 const SAMPLE_CONTENT = [
   {
     id: "ai-design-systems-2026",
     title: "AI-Powered Design Systems: Automating Design at Scale",
     description: "Explore how AI is transforming design systems by automatically generating components, maintaining consistency, and adapting to user behavior patterns. Learn practical implementation strategies for 2026.",
-    url: "https://uxdesign.cc/ai-powered-design-systems-2026",
+    url: "https://www.google.com/search?q=site:uxdesign.cc+AI+design+systems+automation+2026",
     contentType: "article" as ContentType,
     tags: ["ai-ux", "design-systems", "automation", "scalability"],
     qualityScore: 0.92,
@@ -19,7 +19,7 @@ const SAMPLE_CONTENT = [
     id: "ethical-ai-ux-principles",
     title: "Building Ethical AI into UX: A Designer's Guide",
     description: "Essential principles and practical frameworks for integrating ethical AI considerations into UX design processes. Covers transparency, bias prevention, and user agency in AI-driven interfaces.",
-    url: "https://www.nngroup.com/articles/ethical-ai-ux-design/",
+    url: "https://www.google.com/search?q=site:nngroup.com+ethical+AI+UX+design+principles",
     contentType: "article" as ContentType,
     tags: ["ai-ethics", "ux-design", "transparency", "bias-prevention"],
     qualityScore: 0.95,
@@ -31,7 +31,7 @@ const SAMPLE_CONTENT = [
     id: "conversational-ui-patterns",
     title: "Conversational UI Patterns for AI Assistants",
     description: "Comprehensive guide to designing conversational interfaces that feel natural and helpful. Includes best practices for chatbots, voice UI, and multimodal AI interactions.",
-    url: "https://uxplanet.org/conversational-ui-patterns-ai-2026",
+    url: "https://www.google.com/search?q=site:uxplanet.org+conversational+UI+patterns+chatbot+design",
     contentType: "article" as ContentType,
     tags: ["conversational-ui", "chatbots", "voice-interface", "ai-interaction"],
     qualityScore: 0.88,
@@ -43,7 +43,7 @@ const SAMPLE_CONTENT = [
     id: "ai-accessibility-design",
     title: "AI-Powered Accessibility: Making Inclusive Design Easier",
     description: "How AI tools are revolutionizing accessibility in design by automatically detecting issues, suggesting improvements, and creating more inclusive user experiences.",
-    url: "https://alistapart.com/article/ai-accessibility-inclusive-design/",
+    url: "https://www.google.com/search?q=site:alistapart.com+AI+accessibility+inclusive+design+automation",
     contentType: "article" as ContentType,
     tags: ["accessibility", "ai-tools", "inclusive-design", "automation"],
     qualityScore: 0.90,

@@ -3,6 +3,24 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
+// Map publication names to their domains for targeted searches
+function getSourceDomain(sourceName: string): string {
+  const domainMap: { [key: string]: string } = {
+    "Nielsen Norman Group": "nngroup.com",
+    "UX Collective": "uxdesign.cc",
+    "UX Planet": "uxplanet.org",
+    "A List Apart": "alistapart.com",
+    "Smashing Magazine": "smashingmagazine.com",
+    "UX Mastery": "uxmastery.com",
+    "UXPin": "uxpin.com",
+    "Figma": "figma.com",
+    "Adobe": "adobe.com",
+    "Medium": "medium.com"
+  };
+
+  return domainMap[sourceName] || "medium.com";
+}
+
 export async function POST() {
   try {
     if (!process.env.GEMINI_API_KEY) {
@@ -15,11 +33,11 @@ export async function POST() {
     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
     const prompt = `
-You are a UX content curator specializing in AI+Design. Find and curate 8-12 high-quality, recent articles about the intersection of AI and UX design.
+You are a UX content curator specializing in AI+Design. Create 8-12 high-quality content recommendations about the intersection of AI and UX design.
 
 Focus on these topics:
 - AI in UX design processes and tools
-- Human-centered AI design
+- Human-centered AI design principles
 - AI ethics and accessibility in design
 - Conversational UI and voice interfaces
 - AI-powered personalization in UX
@@ -27,30 +45,29 @@ Focus on these topics:
 - User research with AI tools
 - AI transparency and explainability in design
 
-For each article, provide:
-1. Title (compelling and accurate)
-2. Description (2-3 sentences explaining key insights)
-3. URL (real, working link - prefer recent content from last 30 days)
-4. Source (publication name)
-5. ContentType (article, tool, or video)
-6. Tags (3-5 relevant tags)
-7. QualityScore (0.0-1.0 based on relevance and quality)
+For each recommendation, provide:
+1. Title (compelling and specific to current AI+UX trends)
+2. Description (2-3 sentences explaining key insights and actionable takeaways)
+3. Source (realistic publication name like "Nielsen Norman Group", "UX Collective", "A List Apart", etc.)
+4. ContentType (article, tool, or video)
+5. Tags (3-5 relevant tags)
+6. QualityScore (0.0-1.0 based on relevance and actionability for UX designers)
+7. SearchQuery (search terms that would help find this type of content)
 
 Return as JSON array with this structure:
 [
   {
-    "title": "Article title",
-    "description": "Brief description of key insights...",
-    "url": "https://example.com/article",
-    "source": "Publication Name",
+    "title": "Designing Ethical AI Interfaces: A UX Framework",
+    "description": "Comprehensive guide to implementing ethical considerations in AI-powered interfaces. Covers transparency patterns, bias detection methods, and user agency principles that every UX designer should know.",
+    "source": "Nielsen Norman Group",
     "contentType": "article",
-    "tags": ["ai-ux", "design-systems", "accessibility"],
-    "qualityScore": 0.85,
-    "publishedAt": "2026-04-06"
+    "tags": ["ai-ethics", "ux-framework", "interface-design", "transparency"],
+    "qualityScore": 0.92,
+    "searchQuery": "ethical AI UX design framework transparency"
   }
 ]
 
-Focus on actionable insights for UX designers working with AI. Prioritize quality over quantity.
+Focus on actionable insights, current trends, and practical frameworks for UX designers working with AI in 2026.
     `;
 
     const result = await model.generateContent(prompt);
@@ -68,18 +85,32 @@ Focus on actionable insights for UX designers working with AI. Prioritize qualit
     try {
       const curatedContent = JSON.parse(jsonText);
 
-      // Add metadata
+      // Add metadata and create functional URLs
       const responseData = {
         status: "SUCCESS",
         message: "Content curated successfully by Gemini AI",
         curatedAt: new Date().toISOString(),
         totalItems: curatedContent.length,
         source: "gemini-ai-curator",
-        items: curatedContent.map((item: any, index: number) => ({
-          id: `gemini-${Date.now()}-${index}`,
-          ...item,
-          processorType: "ai",
-        }))
+        items: curatedContent.map((item: any, index: number) => {
+          // Create search URLs based on the search query and source
+          const searchQuery = encodeURIComponent(item.searchQuery || item.title);
+          const sourceQuery = item.source ? encodeURIComponent(`site:${getSourceDomain(item.source)} ${item.searchQuery || item.title}`) : searchQuery;
+
+          return {
+            id: `gemini-${Date.now()}-${index}`,
+            title: item.title,
+            description: item.description,
+            url: `https://www.google.com/search?q=${sourceQuery}`,
+            source: item.source,
+            contentType: item.contentType || "article",
+            tags: item.tags || [],
+            qualityScore: item.qualityScore || 0.8,
+            publishedAt: new Date().toISOString().split('T')[0], // Today's date
+            processorType: "ai",
+            searchQuery: item.searchQuery
+          };
+        })
       };
 
       return NextResponse.json(responseData);
