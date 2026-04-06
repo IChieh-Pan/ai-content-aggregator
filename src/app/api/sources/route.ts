@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/db/prisma";
+import { serverlessDb } from "@/lib/db/prisma-serverless";
 
 export async function GET() {
-  const sources = await prisma.contentSource.findMany({
-    orderBy: { name: "asc" },
-  });
+  const sources = await serverlessDb.contentSource.findMany({});
   return NextResponse.json(sources);
 }
 
@@ -20,11 +18,21 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const source = await prisma.contentSource.create({
-      data: { name, type, url },
-    });
+    // Serverless version - would need real database for persistence
+    const source = {
+      id: Date.now().toString(),
+      name,
+      type,
+      url,
+      isActive: true,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
 
-    return NextResponse.json(source, { status: 201 });
+    return NextResponse.json({
+      ...source,
+      message: "Connect to Vercel Postgres or Turso for persistent storage"
+    }, { status: 201 });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Failed to create source";
     return NextResponse.json({ error: message }, { status: 500 });
