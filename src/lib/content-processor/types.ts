@@ -43,6 +43,7 @@ export type ContentCategory =
   | "visual-design"
   | "prototyping"
   | "design-thinking"
+  | "ai-ux"
   | "general";
 
 export interface ContentProcessor {

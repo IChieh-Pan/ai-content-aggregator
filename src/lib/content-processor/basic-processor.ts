@@ -9,16 +9,17 @@ import type {
 } from "./types";
 
 const CATEGORY_KEYWORDS: Record<ContentCategory, string[]> = {
-  "ux-research": ["research", "study", "findings", "insights", "data", "survey", "interview", "observation", "ethnography", "contextual inquiry"],
-  "ui-design": ["interface", "ui", "visual", "layout", "component", "button", "form", "input", "screen"],
-  "interaction-design": ["interaction", "animation", "transition", "gesture", "click", "hover", "state", "flow"],
-  "accessibility": ["accessibility", "a11y", "wcag", "aria", "screen reader", "contrast", "keyboard", "assistive"],
-  "design-systems": ["design system", "component library", "tokens", "atomic", "pattern library", "styleguide"],
-  "user-testing": ["testing", "a/b test", "usability test", "analytics", "metrics", "conversion", "heatmap"],
-  "information-architecture": ["information architecture", "navigation", "sitemap", "taxonomy", "labeling", "search"],
-  "visual-design": ["typography", "color", "spacing", "grid", "iconography", "illustration", "branding"],
+  "ux-research": ["research", "study", "findings", "insights", "data", "survey", "interview", "observation", "ethnography", "contextual inquiry", "user behavior", "analytics"],
+  "ui-design": ["interface", "ui", "visual", "layout", "component", "button", "form", "input", "screen", "adaptive interface", "smart defaults"],
+  "interaction-design": ["interaction", "animation", "transition", "gesture", "click", "hover", "state", "flow", "conversational ui", "voice interface", "chatbot"],
+  "accessibility": ["accessibility", "a11y", "wcag", "aria", "screen reader", "contrast", "keyboard", "assistive", "ai accessibility", "inclusive design"],
+  "design-systems": ["design system", "component library", "tokens", "atomic", "pattern library", "styleguide", "ai design tools", "design automation"],
+  "user-testing": ["testing", "a/b test", "usability test", "analytics", "metrics", "conversion", "heatmap", "automated testing", "user behavior prediction"],
+  "information-architecture": ["information architecture", "navigation", "sitemap", "taxonomy", "labeling", "search", "recommendation", "personalization"],
+  "visual-design": ["typography", "color", "spacing", "grid", "iconography", "illustration", "branding", "generative design"],
   "prototyping": ["prototype", "wireframe", "mockup", "figma", "sketch", "adobe xd", "invision"],
   "design-thinking": ["design thinking", "ideation", "empathy", "define", "brainstorm", "workshop", "co-creation"],
+  "ai-ux": ["ai ux", "ux ai", "artificial intelligence", "machine learning", "human-centered ai", "ethical ai", "ai ethics", "explainable ai", "ai transparency", "algorithmic bias", "ai-powered", "ai-driven", "intelligent interfaces", "predictive ux", "ai research", "natural language"],
   "general": [],
 };
 
@@ -33,6 +34,7 @@ const CATEGORY_TO_CONTENT_TYPE: Record<ContentCategory, ContentType> = {
   "visual-design": "article",
   "prototyping": "tool",
   "design-thinking": "article",
+  "ai-ux": "article",
   "general": "article",
 };
 
