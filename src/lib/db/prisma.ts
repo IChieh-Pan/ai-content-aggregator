@@ -14,6 +14,8 @@ function createPrismaClient() {
     throw new Error("DATABASE_URL environment variable is not set");
   }
 
+  console.log("Creating Prisma client with:", connectionString.substring(0, 30) + "...");
+
   const pool = new Pool({
     connectionString,
     ssl: { rejectUnauthorized: false }
@@ -27,7 +29,10 @@ function createPrismaClient() {
   });
 }
 
-export const prisma = globalForPrisma.prisma ?? createPrismaClient();
+// In production, always create fresh client to avoid caching old DATABASE_URL
+export const prisma = process.env.NODE_ENV === "production"
+  ? createPrismaClient()
+  : (globalForPrisma.prisma ?? createPrismaClient());
 
 if (process.env.NODE_ENV !== "production") {
   globalForPrisma.prisma = prisma;
